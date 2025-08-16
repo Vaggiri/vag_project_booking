@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Booking — VAG CREATIONS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="styles.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+
+  <header class="bg-dark text-white py-4">
+    <div class="container d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <div id="logoPreview" class="me-3 rounded bg-white p-1" style="width:64px;height:64px;display:flex;align-items:center;justify-content:center;">
+          <img id="logoImg" src="" alt="Logo preview" style="max-width:100%; max-height:100%; display:none;">
+          <span id="logoPlaceholder" class="text-dark fw-bold">VAG</span>
+        </div>
+        <div>
+          <h1 class="h5 mb-0">VAG CREATIONS</h1>
+          <small class="text-muted">Project Booking</small>
+        </div>
+      </div>
+      <div>
+        <a href="#" class="btn btn-outline-light btn-sm" id="uploadLogoTrigger">Upload Logo</a>
+        <input id="logoUpload" type="file" accept="image/*" style="display:none">
+      </div>
+    </div>
+  </header>
+
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <h2 class="fw-bold">Thank you for choosing <span class="text-primary">VAG CREATIONS</span></h2>
+              <p class="text-muted mb-0">Tell us about your idea — we'll take care of the rest.</p>
+            </div>
+
+            <div class="mb-3">
+              <div class="progress" style="height:10px;">
+                <div id="formProgress" class="progress-bar" role="progressbar" style="width:0%"></div>
+              </div>
+              <div class="d-flex justify-content-between mt-2 small text-muted">
+                <span>Contact</span><span>Project</span><span>Review</span>
+              </div>
+            </div>
+
+            <form id="bookingForm" class="needs-validation" novalidate enctype="multipart/form-data">
+              <!-- Honeypot -->
+              <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="fullName" class="form-label">Full name *</label>
+                  <input type="text" class="form-control" id="fullName" name="name" required>
+                  <div class="invalid-feedback">Please enter your name.</div>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="email" class="form-label">Email address *</label>
+                  <input type="email" class="form-control" id="email" name="_replyto" required>
+                  <div class="invalid-feedback">A valid email is required.</div>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="whatsapp" class="form-label">WhatsApp number *</label>
+                  <input type="tel" class="form-control" id="whatsapp" name="whatsapp" placeholder="+91XXXXXXXXXX" required pattern="^\+?[0-9\s\-]{6,20}$">
+                  <div class="invalid-feedback">Please provide a valid phone number.</div>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="projectTitle" class="form-label">Project title</label>
+                  <input type="text" class="form-control" id="projectTitle" name="project_title" placeholder="e.g., Smart Irrigation System">
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label d-block">Select domain(s) *</label>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input domain-checkbox" type="checkbox" id="domainWeb" name="domains" value="Web Development">
+                    <label class="form-check-label" for="domainWeb">Web Development</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input domain-checkbox" type="checkbox" id="domainIoT" name="domains" value="IoT">
+                    <label class="form-check-label" for="domainIoT">IoT</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input domain-checkbox" type="checkbox" id="domainElec" name="domains" value="Electronic Projects">
+                    <label class="form-check-label" for="domainElec">Electronic Projects</label>
+                  </div>
+                  <div class="invalid-feedback d-block" id="domainError" style="display:none;">Select at least one domain.</div>
+                </div>
+
+                <div class="col-12">
+                  <label for="description" class="form-label">Few lines about your project</label>
+                  <textarea class="form-control" id="description" name="project_description" rows="4" placeholder="Describe objectives, features, integrations, timeline..."></textarea>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label d-block">Do you already have a project idea? *</label>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="idea_status" id="ideaYes" value="Have idea" checked>
+                    <label class="form-check-label" for="ideaYes">I have an idea</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="idea_status" id="ideaNo" value="Need help">
+                    <label class="form-check-label" for="ideaNo">I need a project/theme</label>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="budget" class="form-label">Expected budget (INR)</label>
+                  <select id="budget" name="budget" class="form-select">
+                    <option value="">Select approximate</option>
+                    <option value="Under 10,000">Under 10,000</option>
+                    <option value="10,000 - 50,000">10,000 - 50,000</option>
+                    <option value="50,000 - 2,00,000">50,000 - 2,00,000</option>
+                    <option value="Above 2,00,000">Above 2,00,000</option>
+                  </select>
+                </div>
+
+                <div class="col-12" id="themeBlock" style="display:none;">
+                  <label for="theme" class="form-label">Preferred theme / concept (if you need a project)</label>
+                  <input type="text" class="form-control" id="theme" name="preferred_theme" placeholder="e.g., Home automation, e-learning, agriculture sensor network">
+                </div>
+
+                <div class="col-12">
+                  <label for="attachment" class="form-label">Attach files / logo (optional)</label>
+                  <input class="form-control" type="file" id="attachment" name="attachment" accept="image/*,.pdf,.doc,.docx">
+                  <div class="form-text">You can attach diagrams, mockups or your logo. Max 5MB recommended.</div>
+                </div>
+
+                <div class="col-12 d-flex justify-content-between align-items-center mt-3">
+                  <div>
+                    <small class="text-muted">We respect your privacy. We'll contact you via email / WhatsApp.</small>
+                  </div>
+                  <div>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                      <span id="submitBtnText">Send Request</span>
+                      <span id="submitSpinner" class="spinner-border spinner-border-sm ms-2" role="status" style="display:none;"></span>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+
+            <div id="msgBox" class="mt-4" style="display:none;">
+              <!-- populated by JS with success/error -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="text-center py-4 text-muted small">
+    &copy; <span id="year"></span> VAG CREATIONS — All rights reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

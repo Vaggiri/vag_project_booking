@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Your Project | VAG CREATIONS</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <script src="https://unpkg.com/lucide-react@0.292.0/dist/lucide-react.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+
+    <style>
+        /* Custom CSS for enhanced UI */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+
+        /* Glassmorphism effect for the main card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Custom gradient for buttons and accents */
+        .brand-gradient {
+            background-image: linear-gradient(to right, #4f46e5, #818cf8);
+        }
+        
+        .brand-gradient-text {
+            background-image: linear-gradient(to right, #4f46e5, #818cf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Styling for form steps and transitions */
+        .form-step {
+            display: none;
+            /* Increased duration for a smoother fade-in */
+            animation: fadeIn 0.7s ease-in-out;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom input field styles */
+        .form-input {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            /* Increased transition duration */
+            transition: all 0.5s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            background-color: #fff;
+        }
+        
+        /* Custom checkbox for domain selection */
+        .domain-card {
+            /* Increased transition duration */
+            transition: all 0.5s ease;
+            border: 2px solid transparent;
+        }
+
+        .domain-card.selected {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+        }
+        
+        /* Progress indicator styles */
+        .step-indicator {
+             /* Increased transition duration */
+            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Custom toast notification for validation */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #dc2626;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+            opacity: 0;
+            /* Increased transition duration */
+            transition: visibility 0s, opacity 0.7s, bottom 0.7s;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="min-h-screen w-full flex items-center justify-center p-4">
+
+        <div class="w-full max-w-5xl mx-auto">
+            <div class="grid lg:grid-cols-3 gap-0">
+                <div class="lg:col-span-1 bg-indigo-600 rounded-t-xl lg:rounded-l-xl lg:rounded-tr-none p-8 text-white flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-10">
+                            <img src="https://vagcreations.unaux.com/wp-content/uploads/2025/05/vag-creations-high-resolution-logo-1.png" alt="VAG CREATIONS Logo" class="h-10 w-10 bg-white p-1 rounded-full">
+                            <h2 class="text-2xl font-bold">VAG CREATIONS</h2>
+                        </div>
+                        <h3 class="text-2xl sm:text-3xl font-bold mb-4">Thank you for choosing VAG CREATIONS</h3>
+                        <p class="text-indigo-200">Fill out the form to get started on your next big project.</p>
+                    </div>
+                    
+                    <div class="space-y-6 mt-10">
+                        <div id="indicator1" class="flex items-center gap-4 step-indicator opacity-100">
+                            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center font-bold text-lg">1</div>
+                            <div>
+                                <p class="font-semibold">Personal Info</p>
+                                <p class="text-sm text-indigo-200">Your contact details</p>
+                            </div>
+                        </div>
+                        <div id="indicator2" class="flex items-center gap-4 step-indicator opacity-50">
+                            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center font-bold text-lg">2</div>
+                            <div>
+                                <p class="font-semibold">Project Details</p>
+                                <p class="text-sm text-indigo-200">Describe your idea</p>
+                            </div>
+                        </div>
+                        <div id="indicator3" class="flex items-center gap-4 step-indicator opacity-50">
+                            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center font-bold text-lg">3</div>
+                            <div>
+                                <p class="font-semibold">Review & Submit</p>
+                                <p class="text-sm text-indigo-200">Final confirmation</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 bg-white rounded-b-xl lg:rounded-r-xl lg:rounded-bl-none p-6 sm:p-8 lg:p-12 relative">
+                    
+                    <div id="form-container">
+                        <div id="step1" class="form-step active">
+                            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Personal Information</h2>
+                            <p class="text-gray-500 mb-8">We'll use this to get in touch with you.</p>
+                            <form id="personalForm" class="space-y-6">
+                                <div>
+                                    <label for="name" class="block text-gray-700 font-semibold mb-2">Full Name <span class="text-red-500">*</span></label>
+                                    <input type="text" id="name" name="name" required class="w-full px-4 py-3 rounded-lg form-input" placeholder="Name">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-gray-700 font-semibold mb-2">Email Address <span class="text-red-500">*</span></label>
+                                    <input type="email" id="email" name="email" required class="w-full px-4 py-3 rounded-lg form-input" placeholder="your mail id">
+                                </div>
+                                <div>
+                                    <label for="whatsapp" class="block text-gray-700 font-semibold mb-2">WhatsApp Number <span class="text-red-500">*</span></label>
+                                    <input type="tel" id="whatsapp" name="whatsapp" required class="w-full px-4 py-3 rounded-lg form-input" placeholder="+91 12345 67890">
+                                </div>
+                                <div class="flex justify-end pt-4">
+                                    <button type="button" onclick="nextStep()" class="brand-gradient text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition duration-500 transform hover:scale-105 shadow-lg">
+                                        Next Step <i data-lucide="arrow-right" class="inline-block w-5 h-5 ml-2"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div id="step2" class="form-step">
+                            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Project Details</h2>
+                            <p class="text-gray-500 mb-8">Tell us more about your vision.</p>
+                            <form id="projectForm" class="space-y-6">
+                                <div>
+                                    <label for="projectTitle" class="block text-gray-700 font-semibold mb-2">Project Title <span class="text-red-500">*</span></label>
+                                    <input type="text" id="projectTitle" name="projectTitle" required class="w-full px-4 py-3 rounded-lg form-input" placeholder="e.g., E-commerce Website for Books">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 font-semibold mb-2">Select Domain(s) <span class="text-red-500">*</span></label>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div class="domain-card bg-gray-50 rounded-lg p-4 cursor-pointer text-center" onclick="selectDomain('web')">
+                                            <input type="checkbox" id="web" name="domain" value="Web Development" class="hidden">
+                                            <i data-lucide="globe" class="mx-auto w-10 h-10 text-indigo-600 mb-2"></i>
+                                            <h3 class="font-semibold">Web Development</h3>
+                                        </div>
+                                        <div class="domain-card bg-gray-50 rounded-lg p-4 cursor-pointer text-center" onclick="selectDomain('iot')">
+                                            <input type="checkbox" id="iot" name="domain" value="IoT" class="hidden">
+                                            <i data-lucide="cpu" class="mx-auto w-10 h-10 text-indigo-600 mb-2"></i>
+                                            <h3 class="font-semibold">IoT Projects</h3>
+                                        </div>
+                                        <div class="domain-card bg-gray-50 rounded-lg p-4 cursor-pointer text-center" onclick="selectDomain('electronic')">
+                                            <input type="checkbox" id="electronic" name="domain" value="Electronic Projects" class="hidden">
+                                            <i data-lucide="zap" class="mx-auto w-10 h-10 text-indigo-600 mb-2"></i>
+                                            <h3 class="font-semibold">Electronic Projects</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label for="projectDescription" class="block text-gray-700 font-semibold mb-2">Project Description</label>
+                                    <textarea id="projectDescription" name="projectDescription" rows="4" class="w-full px-4 py-3 rounded-lg form-input" placeholder="Describe your project in detail..."></textarea>
+                                </div>
+                                
+                                <div>
+                                    <label for="budget" class="block text-gray-700 font-semibold mb-2">Expected Budget (INR)</label>
+                                    <input type="text" id="budget" name="budget" class="w-full px-4 py-3 rounded-lg form-input" placeholder="e.g., 5,000 - 10,000">
+                                </div>
+                                
+                                <div class="flex justify-between pt-4">
+                                    <button type="button" onclick="prevStep()" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition duration-500">
+                                        <i data-lucide="arrow-left" class="inline-block w-5 h-5 mr-2"></i> Back
+                                    </button>
+                                    <button type="button" onclick="nextStep()" class="brand-gradient text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition duration-500 transform hover:scale-105 shadow-lg">
+                                        Review Project <i data-lucide="arrow-right" class="inline-block w-5 h-5 ml-2"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div id="step3" class="form-step">
+                            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Review Your Information</h2>
+                            <p class="text-gray-500 mb-8">Please confirm the details below are correct.</p>
+                            <div class="bg-gray-50 p-6 rounded-lg space-y-6">
+                                <div>
+                                    <h3 class="text-lg font-bold text-indigo-700 mb-3 flex items-center gap-2">
+                                        <i data-lucide="user-circle" class="w-6 h-6"></i> Personal Details
+                                    </h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                                        <div><p class="text-gray-500">Full Name</p><p id="reviewName" class="font-semibold text-gray-800"></p></div>
+                                        <div><p class="text-gray-500">Email</p><p id="reviewEmail" class="font-semibold text-gray-800"></p></div>
+                                        <div><p class="text-gray-500">WhatsApp</p><p id="reviewWhatsapp" class="font-semibold text-gray-800"></p></div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div>
+                                    <h3 class="text-lg font-bold text-indigo-700 mb-3 flex items-center gap-2">
+                                        <i data-lucide="lightbulb" class="w-6 h-6"></i> Project Details
+                                    </h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                                        <div><p class="text-gray-500">Project Title</p><p id="reviewTitle" class="font-semibold text-gray-800"></p></div>
+                                        <div><p class="text-gray-500">Domain(s)</p><p id="reviewDomain" class="font-semibold text-gray-800"></p></div>
+                                        <div class="md:col-span-2"><p class="text-gray-500">Description</p><p id="reviewDescription" class="font-semibold text-gray-800 break-words"></p></div>
+                                        <div><p class="text-gray-500">Budget</p><p id="reviewBudget" class="font-semibold text-gray-800"></p></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="agreeTerms" required class="h-5 w-5 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                    <span class="ml-3 text-gray-600">I agree to the <a href="#" class="text-indigo-600 font-semibold hover:underline">Terms and Conditions</a></span>
+                                </label>
+                            </div>
+                            
+                            <div class="flex justify-between pt-8">
+                                <button type="button" onclick="prevStep()" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition duration-500">
+                                    <i data-lucide="arrow-left" class="inline-block w-5 h-5 mr-2"></i> Back
+                                </button>
+                                <button type="button" onclick="submitForm()" id="submitBtn" class="brand-gradient text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition duration-500 transform hover:scale-105 shadow-lg flex items-center">
+                                    <span id="submitText">Submit Project</span>
+                                    <i data-lucide="send" id="submitIcon" class="inline-block w-5 h-5 ml-2"></i>
+                                    <i data-lucide="loader-2" id="loadingIcon" class="inline-block w-5 h-5 ml-2 animate-spin hidden"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="step4" class="form-step">
+                            <div class="text-center py-12">
+                                <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <i data-lucide="check-circle-2" class="text-green-500 w-16 h-16"></i>
+                                </div>
+                                <h2 class="text-3xl font-bold text-gray-800 mb-4">Thank You!</h2>
+                                <p class="text-gray-600 mb-8 max-w-md mx-auto">Your project has been submitted. We'll review it and get back to you within 24 hours.</p>
+                                <button onclick="resetForm()" class="brand-gradient text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition duration-500">
+                                    Submit Another Project
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast"></div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+        
+        // Initialize EmailJS
+        emailjs.init('zs-sL4ACY7Is_J2to'); // Replace with your EmailJS user ID
+
+        let currentStep = 1;
+        const totalSteps = 4;
+        const steps = [1, 2, 3]; // Form steps before confirmation
+
+        function updateIndicators(step) {
+            for (let i = 1; i <= steps.length; i++) {
+                const indicator = document.getElementById(`indicator${i}`);
+                if (i < step) {
+                    indicator.classList.remove('opacity-50');
+                    indicator.classList.add('opacity-100');
+                } else if (i === step) {
+                    indicator.classList.remove('opacity-50');
+                    indicator.classList.add('opacity-100');
+                } else {
+                    indicator.classList.remove('opacity-100');
+                    indicator.classList.add('opacity-50');
+                }
+            }
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+            const activeStep = document.getElementById(`step${step}`);
+            if (activeStep) {
+                activeStep.classList.add('active');
+                updateIndicators(step);
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = "show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        function nextStep() {
+            if (validateStep(currentStep)) {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    showStep(currentStep);
+                    if (currentStep === 3) {
+                        populateReviewFields();
+                    }
+                }
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function validateStep(step) {
+            switch(step) {
+                case 1:
+                    const name = document.getElementById('name').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const whatsapp = document.getElementById('whatsapp').value.trim();
+                    if (!name || !email || !whatsapp) {
+                        showToast('Please fill all required fields.');
+                        return false;
+                    }
+                    if (!/^\S+@\S+\.\S+$/.test(email)) {
+                        showToast('Please enter a valid email address.');
+                        return false;
+                    }
+                    return true;
+                
+                case 2:
+                    const projectTitle = document.getElementById('projectTitle').value.trim();
+                    const domains = document.querySelectorAll('input[name="domain"]:checked');
+                    if (!projectTitle || domains.length === 0) {
+                        showToast('Please provide a project title and select at least one domain.');
+                        return false;
+                    }
+                    return true;
+                
+                case 3:
+                    if (!document.getElementById('agreeTerms').checked) {
+                        showToast('Please agree to the terms and conditions.');
+                        return false;
+                    }
+                    return true;
+                
+                default:
+                    return true;
+            }
+        }
+
+        function selectDomain(domainId) {
+            const checkbox = document.getElementById(domainId);
+            const card = checkbox.parentElement;
+            checkbox.checked = !checkbox.checked;
+            card.classList.toggle('selected', checkbox.checked);
+        }
+
+        function populateReviewFields() {
+            document.getElementById('reviewName').textContent = document.getElementById('name').value || 'Not provided';
+            document.getElementById('reviewEmail').textContent = document.getElementById('email').value || 'Not provided';
+            document.getElementById('reviewWhatsapp').textContent = document.getElementById('whatsapp').value || 'Not provided';
+            document.getElementById('reviewTitle').textContent = document.getElementById('projectTitle').value || 'Not provided';
+            const domains = Array.from(document.querySelectorAll('input[name="domain"]:checked')).map(el => el.value).join(', ');
+            document.getElementById('reviewDomain').textContent = domains || 'Not specified';
+            document.getElementById('reviewDescription').textContent = document.getElementById('projectDescription').value || 'Not provided';
+            document.getElementById('reviewBudget').textContent = document.getElementById('budget').value || 'Not specified';
+        }
+        
+        function resetForm() {
+            document.getElementById('personalForm').reset();
+            document.getElementById('projectForm').reset();
+            document.querySelectorAll('.domain-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById('agreeTerms').checked = false;
+            currentStep = 1;
+            showStep(currentStep);
+        }
+
+        function submitForm() {
+            if (!validateStep(3)) return;
+
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const submitIcon = document.getElementById('submitIcon');
+            const loadingIcon = document.getElementById('loadingIcon');
+
+            submitBtn.disabled = true;
+            submitText.textContent = 'Submitting...';
+            submitIcon.classList.add('hidden');
+            loadingIcon.classList.remove('hidden');
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                whatsapp: document.getElementById('whatsapp').value,
+                projectTitle: document.getElementById('projectTitle').value,
+                domains: Array.from(document.querySelectorAll('input[name="domain"]:checked')).map(el => el.value).join(', '),
+                projectDescription: document.getElementById('projectDescription').value,
+                budget: document.getElementById('budget').value || 'Not specified',
+                submissionDate: new Date().toLocaleString(),
+                year: new Date().getFullYear()
+            };
+
+            emailjs.send('vag_pro_id', 'vag_project_req', formData)
+                .then(response => {
+                    console.log('Email sent!', response.status, response.text);
+                    currentStep++;
+                    showStep(currentStep);
+                })
+                .catch(error => {
+                    console.error('Email failed:', error);
+                    showToast('Failed to send. Please try again.');
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitText.textContent = 'Submit Project';
+                    submitIcon.classList.remove('hidden');
+                    loadingIcon.classList.add('hidden');
+                });
+        }
+
+        // Initialize the first step on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            showStep(currentStep);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+:root{
+  --primary:#0d6efd;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg, #f8f9fa 0%, #eef2f7 100%);
+}
+
+.card {
+  border: none;
+}
+
+#logoPreview {
+  width:64px;
+  height:64px;
+  overflow:hidden;
+}
+
+#logoPreview img {
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+#logoPlaceholder {
+  font-size:18px;
+}
+
+@media (max-width:576px){
+  header .container {
+    flex-direction: column;
+    gap:10px;
+  }
+}
